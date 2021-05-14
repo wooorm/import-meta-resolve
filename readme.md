@@ -3,7 +3,6 @@
 [![Build][build-badge]][build]
 [![Coverage][coverage-badge]][coverage]
 [![Downloads][downloads-badge]][downloads]
-[![Size][size-badge]][size]
 
 Resolve things like Node.js.
 Ponyfill for [`import.meta.resolve`][resolve].
@@ -93,10 +92,6 @@ Returns a promise that resolves to a full `file:` URL to the found thing.
 [downloads-badge]: https://img.shields.io/npm/dm/import-meta-resolve.svg
 
 [downloads]: https://www.npmjs.com/package/import-meta-resolve
-
-[size-badge]: https://img.shields.io/bundlephobia/minzip/import-meta-resolve.svg
-
-[size]: https://bundlephobia.com/result?p=import-meta-resolve
 
 [npm]: https://docs.npmjs.com/cli/install
 
