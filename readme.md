@@ -5,8 +5,9 @@
 [![Downloads][downloads-badge]][downloads]
 [![Size][size-badge]][size]
 
-Resolve things like node does.
-Ponyfill for `import.meta.resolve`
+Resolve things like Node.js.
+Ponyfill for [`import.meta.resolve`][resolve].
+Supports import maps, export maps, loading CJS and ESM projects, all of that!
 
 ## Install
 
@@ -30,9 +31,10 @@ import {resolve} from 'import-meta-resolve'
 This package exports the following identifiers: `resolve`.
 There is no default export.
 
-## `resolve(specifier, base?, conditions?)`
+## `resolve(specifier, base)`
 
 Exactly match [the `ESM_RESOLVE` algorithm][algo].
+Except that `base` is required (you should probably pass `import.meta.url`).
 
 ###### Parameters
 
@@ -40,12 +42,10 @@ Exactly match [the `ESM_RESOLVE` algorithm][algo].
     — `/example.js`, `./example.js`, `../example.js`, `some-package`
 *   `base` (`string`, example: `import.meta.url`)
     Full URL that this is resolved from
-*   `conditions` (`Set<string>`, default: `new Set()`)
-    Unordered set of conditions
 
 ###### Returns
 
-Returns a full URL to the found *thing*.
+Returns a promise that resolves to a full `file:` URL to the found thing.
 
 ###### Errors
 
@@ -73,8 +73,7 @@ Returns a full URL to the found *thing*.
     `--experimental-policy`, `--input-type`, `--preserve-symlinks`,
     `--preserve-symlinks-main`, nor `--conditions` work
 *   No attempt is made to add a suggestion on what to use on errors
-*   Return value is a `file:` URL, not an object to a `file:` URL
-*   Prototypal methods are not guarded: Node protects for example `string#slice`
+*   Prototypal methods are not guarded: Node protects for example `String#slice`
     or so from being tampered with, whereas we don’t
 
 ## License
@@ -106,3 +105,5 @@ Returns a full URL to the found *thing*.
 [author]: https://wooorm.com
 
 [algo]: https://nodejs.org/dist/latest-v14.x/docs/api/esm.html#esm_resolver_algorithm
+
+[resolve]: https://nodejs.org/api/esm.html#esm_import_meta_resolve_specifier_parent
