@@ -1,0 +1,7 @@
+.DS_Store
+*.d.ts
+*.log
+coverage/
+/node_modules
+test/baseline.js
+yarn.lock
