@@ -71,9 +71,10 @@ Returns a promise that resolves to a full `file:` URL to the found thing.
     `--experimental-json-modules`, `--experimental-wasm-modules`,
     `--experimental-policy`, `--input-type`, `--preserve-symlinks`,
     `--preserve-symlinks-main`, nor `--conditions` work
-*   No attempt is made to add a suggestion on what to use on errors
+*   No attempt is made to add a suggestion based on how things used to work in
+    CJS before to not-found errors
 *   Prototypal methods are not guarded: Node protects for example `String#slice`
-    or so from being tampered with, whereas we don’t
+    or so from being tampered with, whereas this doesn’t
 
 ## License
 
