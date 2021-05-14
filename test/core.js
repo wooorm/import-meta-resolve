@@ -1,7 +1,11 @@
-import fs from 'fs/promises'
+import semver from 'semver'
+import {promises as fs} from 'fs'
 import {URL, pathToFileURL} from 'url'
 import test from 'tape'
 import {resolve} from '../index.js'
+
+const windows = process.platform === 'win32'
+const oldNode = semver.lt(process.versions.node, '14.0.0')
 
 process.on('exit', async () => {
   await fs.rename('package.json.bak', 'package.json')
@@ -18,28 +22,28 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   }
 
   try {
-    await resolve('a', import.meta.url)
+    await resolve('abc', import.meta.url)
     t.fail()
   } catch (error) {
     t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'unfound bare specifier')
   }
 
   try {
-    await resolve('/a', import.meta.url)
+    await resolve('/abc', import.meta.url)
     t.fail()
   } catch (error) {
     t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'unfound absolute path')
   }
 
   try {
-    await resolve('./a', import.meta.url)
+    await resolve('./abc', import.meta.url)
     t.fail()
   } catch (error) {
     t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'unfound relative path')
   }
 
   try {
-    await resolve('../a', import.meta.url)
+    await resolve('../abc', import.meta.url)
     t.fail()
   } catch (error) {
     t.equal(
@@ -319,11 +323,15 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/o `main`, but warn (1)'
     )
 
-    t.is(
-      deprecation,
-      'DEP0151',
-      'should be able to import ESM packages w/o `main`, but warn (2)'
-    )
+    if (windows && oldNode) {
+      // Empty.
+    } else {
+      t.is(
+        deprecation,
+        'DEP0151',
+        'should be able to import ESM packages w/o `main`, but warn (2)'
+      )
+    }
 
     process.emitWarning = oldEmitWarning
   })()
@@ -351,11 +359,15 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/ non-full `main`, but warn (1)'
     )
 
-    t.is(
-      deprecation,
-      'DEP0151',
-      'should be able to import ESM packages w/ non-full `main`, but warn (2)'
-    )
+    if (windows && oldNode) {
+      // Empty.
+    } else {
+      t.is(
+        deprecation,
+        'DEP0151',
+        'should be able to import ESM packages w/ non-full `main`, but warn (2)'
+      )
+    }
 
     process.emitWarning = oldEmitWarning
   })()
@@ -409,7 +421,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     t.equal(
       error.code,
       'ERR_PACKAGE_PATH_NOT_EXPORTED',
-      'should not be able to import things not in an export map'
+      'should not be able to import things from an empty export map'
     )
   }
 
@@ -417,6 +429,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     const oldEmitWarning = process.emitWarning
     /** @type {string} */
     let deprecation
+
+    // Windows doesn’t like `/` as a final path separator here.
+    if (windows) return
 
     // @ts-expect-error hush
     process.emitWarning =
@@ -552,11 +567,15 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       t.fail()
     } catch {}
 
-    t.is(
-      deprecation,
-      'DEP0148',
-      'should support legacy folders in import maps (2)'
-    )
+    if (windows && oldNode) {
+      // Empty.
+    } else {
+      t.is(
+        deprecation,
+        'DEP0148',
+        'should support legacy folders in import maps (2)'
+      )
+    }
 
     process.emitWarning = oldEmitWarning
   })()
