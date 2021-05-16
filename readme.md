@@ -47,43 +47,54 @@ async function main() {
 
 ## API
 
-This package exports the following identifiers: `resolve`.
+This package exports the following identifiers: `resolve`, `moduleResolve`.
 There is no default export.
 
-## `resolve(specifier, base)`
+## `resolve(specifier, parent)`
 
-Exactly match [the `ESM_RESOLVE` algorithm][algo].
-Except that `base` is required (you should probably pass `import.meta.url`).
+Match `import.meta.resolve` except that `parent` is required (you should
+probably pass `import.meta.url`).
 
 ###### Parameters
 
 *   `specifier` (`string`)
     — `/example.js`, `./example.js`, `../example.js`, `some-package`
-*   `base` (`string`, example: `import.meta.url`)
-    Full URL that this is resolved from
+*   `parent` (`string`, example: `import.meta.url`)
+    Full URL (to a file) that `specifier` is resolved relative from
 
 ###### Returns
 
-Returns a promise that resolves to a full `file:` URL to the found thing.
+Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL to
+the found thing.
 
-###### Errors
+## `moduleResolve(specifier, parent[, conditions])`
 
-*   `ERR_INVALID_MODULE_SPECIFIER`
-    — when `specifier` is invalid
-*   `ERR_INVALID_PACKAGE_CONFIG`
-    — when a `package.json` is invalid
-*   `ERR_INVALID_PACKAGE_TARGET`
-    — when a `package.json` `exports` or `imports` is invalid
-*   `ERR_MODULE_NOT_FOUND`
-    — when `specifier` cannot be found in `base`
-*   `ERR_PACKAGE_IMPORT_NOT_DEFINED`
-    — when a local import is not defined in an import map
-*   `ERR_PACKAGE_PATH_NOT_EXPORTED`
-    — when an export is not defined in an export map
-*   `ERR_UNSUPPORTED_DIR_IMPORT`
-    — when attempting to import a directory
+The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
+(which is sync and slightly lower-level than `resolve`).
 
-###### Differences to Node
+###### Parameters
+
+*   `specifier` (`string`)
+    — `/example.js`, `./example.js`, `../example.js`, `some-package`
+*   `parent` (`URL`, example: `import.meta.url`)
+    Full URL (to a file) that `specifier` is resolved relative from
+*   `conditions` (`Set<string>`, default: `new Set('node', 'import')`)
+    Conditions
+
+###### Returns
+
+A URL object to the found thing.
+
+## Algorithm
+
+The algorithm for `resolve` matches how Node handles `import.meta.resolve`, with
+a couple of differences.
+
+The algorithm for `moduleResolve` matches the [Resolver Algorithm
+Specification][algo] as detailed in the Node docs (which is sync and slightly
+lower-level than `resolve`).
+
+## Differences to Node
 
 *   `parent` defaulting to `import.meta.url` cannot be ponyfilled: you have to
     explicitly pass it
@@ -95,6 +106,23 @@ Returns a promise that resolves to a full `file:` URL to the found thing.
     CJS before to not-found errors
 *   Prototypal methods are not guarded: Node protects for example `String#slice`
     or so from being tampered with, whereas this doesn’t
+
+###### Errors
+
+*   `ERR_INVALID_MODULE_SPECIFIER`
+    — when `specifier` is invalid
+*   `ERR_INVALID_PACKAGE_CONFIG`
+    — when a `package.json` is invalid
+*   `ERR_INVALID_PACKAGE_TARGET`
+    — when a `package.json` `exports` or `imports` is invalid
+*   `ERR_MODULE_NOT_FOUND`
+    — when `specifier` cannot be found in `parent`
+*   `ERR_PACKAGE_IMPORT_NOT_DEFINED`
+    — when a local import is not defined in an import map
+*   `ERR_PACKAGE_PATH_NOT_EXPORTED`
+    — when an export is not defined in an export map
+*   `ERR_UNSUPPORTED_DIR_IMPORT`
+    — when attempting to import a directory
 
 ## License
 

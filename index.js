@@ -1,4 +1,6 @@
-import {defaultResolve} from './lib/resolve.js'
+import {moduleResolve, defaultResolve} from './lib/resolve.js'
+
+export {moduleResolve}
 
 /**
  * Provides a module-relative resolution function scoped to each module,
