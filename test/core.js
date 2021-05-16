@@ -228,7 +228,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   )
 
   try {
-    await resolve('./example.js', 'data:1', import.meta.url)
+    await resolve('./example.js', 'data:1')
     t.fail()
   } catch (error) {
     t.equal(

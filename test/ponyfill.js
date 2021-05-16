@@ -3,6 +3,7 @@ import {resolve} from '../index.js'
 
 test('ponyfill', async function (t) {
   try {
+    // @ts-expect-error
     await resolve('x')
     t.fail()
   } catch (error) {

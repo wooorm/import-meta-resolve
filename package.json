@@ -48,7 +48,7 @@
   "scripts": {
     "generate": "node script.js",
     "prepack": "npm run build && npm run format",
-    "build": "rimraf \"{lib/**,}*.d.ts\" && tsc && type-coverage",
+    "build": "rimraf \"{lib/**,test/**,}*.d.ts\" && tsc && type-coverage",
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
     "test-api": "node --experimental-import-meta-resolve test/baseline.js && node test/index.js",
     "test-coverage": "node --experimental-import-meta-resolve test/baseline.js && c8 --check-coverage --branches 75 --functions 75 --lines 75 --statements 75 --reporter lcov node test/index.js",
