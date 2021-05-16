@@ -5,7 +5,7 @@ import test from 'tape'
 import {resolve} from '../index.js'
 
 const windows = process.platform === 'win32'
-const oldNode = semver.lt(process.versions.node, '14.0.0')
+const oldNode = semver.lt(process.versions.node, '16.0.0')
 
 process.on('exit', async () => {
   await fs.rename('package.json.bak', 'package.json')
@@ -323,7 +323,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/o `main`, but warn (1)'
     )
 
-    if (windows && oldNode) {
+    if (oldNode) {
       // Empty.
     } else {
       t.is(
@@ -359,7 +359,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/ non-full `main`, but warn (1)'
     )
 
-    if (windows && oldNode) {
+    if (oldNode) {
       // Empty.
     } else {
       t.is(
@@ -567,7 +567,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       t.fail()
     } catch {}
 
-    if (windows && oldNode) {
+    if (oldNode) {
       // Empty.
     } else {
       t.is(

@@ -1,3 +1,4 @@
+name: main
 on:
   - pull_request
   - push
