@@ -6,7 +6,8 @@ import test from 'tape'
 import {resolve} from '../index.js'
 
 const windows = process.platform === 'win32'
-const oldNode = semver.lt(process.versions.node, '16.0.0')
+const veryOldNode = semver.lt(process.versions.node, '16.0.0')
+const oldNode = semver.lt(process.versions.node, '18.0.0')
 
 process.on('exit', async () => {
   await fs.rename('package.json.bak', 'package.json')
@@ -234,7 +235,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   } catch (error) {
     t.equal(
       error.code,
-      'ERR_INVALID_URL',
+      oldNode ? 'ERR_INVALID_URL' : 'ERR_INVALID_URL_SCHEME',
       'should not be able to resolve relative to a `data:` parent url'
     )
   }
@@ -323,7 +324,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/o `main`, but warn (1)'
     )
 
-    if (oldNode) {
+    if (veryOldNode) {
       // Empty.
     } else {
       t.is(
@@ -358,7 +359,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/ non-full `main`, but warn (1)'
     )
 
-    if (oldNode) {
+    if (veryOldNode) {
       // Empty.
     } else {
       t.is(
@@ -517,7 +518,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   } catch (error) {
     t.equal(
       error.code,
-      'ERR_INVALID_PACKAGE_TARGET',
+      oldNode ? 'ERR_INVALID_PACKAGE_TARGET' : 'ERR_PACKAGE_IMPORT_NOT_DEFINED',
       'should not be able to import an invalid import package target'
     )
   }
@@ -548,7 +549,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     } catch (error) {
       t.equal(
         error.code,
-        'ERR_MODULE_NOT_FOUND',
+        oldNode ? 'ERR_MODULE_NOT_FOUND' : 'ERR_PACKAGE_IMPORT_NOT_DEFINED',
         'should support legacy folders in import maps (1)'
       )
     }
@@ -562,9 +563,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       t.fail()
     } catch {}
 
-    if (oldNode) {
-      // Empty.
-    } else {
+    if (!veryOldNode && oldNode) {
       t.is(
         deprecation,
         'DEP0148',
