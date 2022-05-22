@@ -580,5 +580,14 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     process.emitWarning = oldEmitWarning
   })()
 
+  t.is(
+    await resolve(
+      '#a',
+      new URL('./node_modules/package-import-map-6/', import.meta.url).href
+    ),
+    new URL('node:net').href,
+    'should be able to resolve to a built-in node module'
+  )
+
   t.end()
 })
