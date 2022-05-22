@@ -1,6 +1,4 @@
-import {moduleResolve, defaultResolve} from './lib/resolve.js'
-
-export {moduleResolve}
+import {defaultResolve} from './lib/resolve.js'
 
 /**
  * Provides a module-relative resolution function scoped to each module,
@@ -31,3 +29,5 @@ export async function resolve(specifier, parent) {
       : Promise.reject(error)
   }
 }
+
+export {moduleResolve} from './lib/resolve.js'

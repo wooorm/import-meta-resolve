@@ -1,6 +1,7 @@
+import process from 'node:process'
+import {promises as fs} from 'node:fs'
+import {URL, pathToFileURL} from 'node:url'
 import semver from 'semver'
-import {promises as fs} from 'fs'
-import {URL, pathToFileURL} from 'url'
 import test from 'tape'
 import {resolve} from '../index.js'
 
@@ -217,13 +218,13 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   t.is(
     await resolve('./index.js?1', import.meta.url),
-    new URL('./index.js?1', import.meta.url).href,
+    new URL('index.js?1', import.meta.url).href,
     'should support a `search` in specifiers'
   )
 
   t.is(
     await resolve('./index.js#1', import.meta.url),
-    new URL('./index.js#1', import.meta.url).href,
+    new URL('index.js#1', import.meta.url).href,
     'should support a `hash` in specifiers'
   )
 
@@ -240,7 +241,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   t.is(
     await resolve('./index.js', import.meta.url),
-    new URL('./index.js', import.meta.url).href,
+    new URL('index.js', import.meta.url).href,
     'should be able to find files w/o `package.json`'
   )
 
@@ -296,7 +297,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   t.is(
     await resolve('package-no-main-2', import.meta.url),
-    new URL('./node_modules/package-no-main-2/index.js', import.meta.url).href,
+    new URL('node_modules/package-no-main-2/index.js', import.meta.url).href,
     'should be able to import CJS packages w/o `main`'
   )
 
@@ -318,8 +319,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
     t.is(
       await resolve('package-no-main-3', import.meta.url),
-      new URL('./node_modules/package-no-main-3/index.js', import.meta.url)
-        .href,
+      new URL('node_modules/package-no-main-3/index.js', import.meta.url).href,
       'should be able to import ESM packages w/o `main`, but warn (1)'
     )
 
@@ -354,8 +354,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
     t.is(
       await resolve('package-no-main-4', import.meta.url),
-      new URL('./node_modules/package-no-main-4/index.js', import.meta.url)
-        .href,
+      new URL('node_modules/package-no-main-4/index.js', import.meta.url).href,
       'should be able to import ESM packages w/ non-full `main`, but warn (1)'
     )
 
@@ -385,21 +384,19 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   t.is(
     await resolve('package-export-map-1/a', import.meta.url),
-    new URL('./node_modules/package-export-map-1/b.js', import.meta.url).href,
+    new URL('node_modules/package-export-map-1/b.js', import.meta.url).href,
     'should be able to resolve to something from an export map (1)'
   )
 
   t.is(
     await resolve('package-export-map-1/lib/c', import.meta.url),
-    new URL('./node_modules/package-export-map-1/lib/c.js', import.meta.url)
-      .href,
+    new URL('node_modules/package-export-map-1/lib/c.js', import.meta.url).href,
     'should be able to resolve to something from an export map (2)'
   )
 
   t.is(
     await resolve('package-export-map-2', import.meta.url),
-    new URL('./node_modules/package-export-map-2/main.js', import.meta.url)
-      .href,
+    new URL('node_modules/package-export-map-2/main.js', import.meta.url).href,
     'should be able to resolve to something from a main export map'
   )
 
@@ -448,16 +445,16 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     t.is(
       await resolve(
         './a/',
-        new URL('./node_modules/package-export-map-5/', import.meta.url).href
+        new URL('node_modules/package-export-map-5/', import.meta.url).href
       ),
-      new URL('./node_modules/package-export-map-5/a/', import.meta.url).href
+      new URL('node_modules/package-export-map-5/a/', import.meta.url).href
     )
 
     try {
       // Twice for coverage: deprecation should fire only once.
       await resolve(
         './a/b.js',
-        new URL('./node_modules/package-export-map-5/', import.meta.url).href
+        new URL('node_modules/package-export-map-5/', import.meta.url).href
       )
       t.fail()
     } catch {}
@@ -468,17 +465,16 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   t.is(
     await resolve(
       '#a',
-      new URL('./node_modules/package-import-map-1/', import.meta.url).href
+      new URL('node_modules/package-import-map-1/', import.meta.url).href
     ),
-    new URL('./node_modules/package-import-map-1/index.js', import.meta.url)
-      .href,
+    new URL('node_modules/package-import-map-1/index.js', import.meta.url).href,
     'should be able to resolve to something from a main export map w/ package name'
   )
 
   try {
     await resolve(
       '#b',
-      new URL('./node_modules/package-import-map-1/', import.meta.url).href
+      new URL('node_modules/package-import-map-1/', import.meta.url).href
     )
     t.fail()
   } catch (error) {
@@ -492,7 +488,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   try {
     await resolve(
       '#a',
-      new URL('./node_modules/package-import-map-2/', import.meta.url).href
+      new URL('node_modules/package-import-map-2/', import.meta.url).href
     )
     t.fail()
   } catch (error) {
@@ -506,17 +502,16 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   t.is(
     await resolve(
       '#a/b.js',
-      new URL('./node_modules/package-import-map-3/', import.meta.url).href
+      new URL('node_modules/package-import-map-3/', import.meta.url).href
     ),
-    new URL('./node_modules/package-import-map-3/index.js', import.meta.url)
-      .href,
+    new URL('node_modules/package-import-map-3/index.js', import.meta.url).href,
     'should be able to resolve to something to import map splats'
   )
 
   try {
     await resolve(
       '#a/b.js',
-      new URL('./node_modules/package-import-map-4/', import.meta.url).href
+      new URL('node_modules/package-import-map-4/', import.meta.url).href
     )
     t.fail()
   } catch (error) {
@@ -547,7 +542,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     try {
       await resolve(
         '#a/b.js',
-        new URL('./node_modules/package-import-map-5/', import.meta.url).href
+        new URL('node_modules/package-import-map-5/', import.meta.url).href
       )
       t.fail()
     } catch (error) {
@@ -562,7 +557,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       // Twice for coverage: deprecation should fire only once.
       await resolve(
         '#a/b.js',
-        new URL('./node_modules/package-import-map-5/', import.meta.url).href
+        new URL('node_modules/package-import-map-5/', import.meta.url).href
       )
       t.fail()
     } catch {}
