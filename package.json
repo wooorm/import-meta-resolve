@@ -29,7 +29,7 @@
     "index.js"
   ],
   "dependencies": {
-    "builtins": "^4.0.0"
+    "builtins": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.0",
