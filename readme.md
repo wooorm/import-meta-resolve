@@ -67,7 +67,7 @@ probably pass `import.meta.url`).
 Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL to
 the found thing.
 
-## `moduleResolve(specifier, parent[, conditions])`
+## `moduleResolve(specifier, parent, conditions, preserveSymlinks)`
 
 The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
 (which is sync and slightly lower-level than `resolve`).
@@ -80,6 +80,8 @@ The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
     Full URL (to a file) that `specifier` is resolved relative from
 *   `conditions` (`Set<string>`, default: `new Set('node', 'import')`)
     Conditions
+*   `preserveSymlinks` (`boolean`, default: `false`)
+    — Keep symlinks instead of resolving them
 
 ###### Returns
 
@@ -100,7 +102,8 @@ lower-level than `resolve`).
     explicitly pass it
 *   No support for CLI flags: `--experimental-specifier-resolution`,
     `--experimental-json-modules`, `--experimental-wasm-modules`,
-    `--experimental-policy`, `--input-type`, `--preserve-symlinks`,
+    `--experimental-policy`, `--experimental-network-imports`, `--no-addons`,
+    `--input-type`, `--preserve-symlinks`,
     `--preserve-symlinks-main`, nor `--conditions` work
 *   No attempt is made to add a suggestion based on how things used to work in
     CJS before to not-found errors

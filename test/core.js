@@ -10,7 +10,6 @@ import test from 'tape'
 import {resolve} from '../index.js'
 
 const windows = process.platform === 'win32'
-const veryOldNode = semver.lt(process.versions.node, '16.0.0')
 const oldNode = semver.lt(process.versions.node, '18.0.0')
 
 process.on('exit', async () => {
@@ -255,11 +254,13 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     t.fail()
   } catch (error) {
     const exception = /** @type {ErrnoException} */ (error)
-    t.equal(
-      exception.code,
-      oldNode ? 'ERR_INVALID_URL' : 'ERR_INVALID_URL_SCHEME',
-      'should not be able to resolve relative to a `data:` parent url'
-    )
+    if (!oldNode) {
+      t.equal(
+        exception.code,
+        oldNode ? 'ERR_INVALID_URL_SCHEME' : 'ERR_INVALID_URL',
+        'should not be able to resolve relative to a `data:` parent url'
+      )
+    }
   }
 
   t.is(
@@ -350,7 +351,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/o `main`, but warn (1)'
     )
 
-    if (veryOldNode) {
+    if (oldNode) {
       // Empty.
     } else {
       t.is(
@@ -385,7 +386,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'should be able to import ESM packages w/ non-full `main`, but warn (1)'
     )
 
-    if (veryOldNode) {
+    if (oldNode) {
       // Empty.
     } else {
       t.is(
@@ -548,11 +549,13 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     t.fail()
   } catch (error) {
     const exception = /** @type {ErrnoException} */ (error)
-    t.equal(
-      exception.code,
-      oldNode ? 'ERR_INVALID_PACKAGE_TARGET' : 'ERR_PACKAGE_IMPORT_NOT_DEFINED',
-      'should not be able to import an invalid import package target'
-    )
+    if (!oldNode) {
+      t.equal(
+        exception.code,
+        'ERR_PACKAGE_IMPORT_NOT_DEFINED',
+        'should not be able to import an invalid import package target'
+      )
+    }
   }
 
   await (async () => {
@@ -580,28 +583,13 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       t.fail()
     } catch (error) {
       const exception = /** @type {ErrnoException} */ (error)
-      t.equal(
-        exception.code,
-        oldNode ? 'ERR_MODULE_NOT_FOUND' : 'ERR_PACKAGE_IMPORT_NOT_DEFINED',
-        'should support legacy folders in import maps (1)'
-      )
-    }
-
-    try {
-      // Twice for coverage: deprecation should fire only once.
-      await resolve(
-        '#a/b.js',
-        new URL('node_modules/package-import-map-5/', import.meta.url).href
-      )
-      t.fail()
-    } catch {}
-
-    if (!veryOldNode && oldNode) {
-      t.is(
-        deprecation,
-        'DEP0148',
-        'should support legacy folders in import maps (2)'
-      )
+      if (!oldNode) {
+        t.equal(
+          exception.code,
+          'ERR_PACKAGE_IMPORT_NOT_DEFINED',
+          'should support legacy folders in import maps (1)'
+        )
+      }
     }
 
     process.emitWarning = oldEmitWarning
