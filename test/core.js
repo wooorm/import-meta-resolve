@@ -153,7 +153,11 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     t.fail()
   } catch (error) {
     const exception = /** @type {ErrnoException} */ (error)
-    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'missing scoped bare specifier')
+    t.equal(
+      exception.code,
+      'ERR_MODULE_NOT_FOUND',
+      'missing scoped bare specifier'
+    )
   }
 
   try {

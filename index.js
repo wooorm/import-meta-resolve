@@ -30,7 +30,8 @@ export async function resolve(specifier, parent) {
   } catch (error) {
     const exception = /** @type {ErrnoException} */ (error)
 
-    return exception.code === 'ERR_UNSUPPORTED_DIR_IMPORT' && typeof exception.url === 'string'
+    return exception.code === 'ERR_UNSUPPORTED_DIR_IMPORT' &&
+      typeof exception.url === 'string'
       ? exception.url
       : Promise.reject(error)
   }
