@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('../index.js').ErrnoException} ErrnoException
+ */
+
 import process from 'node:process'
 import {promises as fs} from 'node:fs'
 import {URL, pathToFileURL} from 'node:url'
@@ -20,36 +24,41 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('', import.meta.url)
     t.fail()
   } catch (error) {
-    t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'empty string')
+    const exception = /** @type {ErrnoException} */ (error)
+    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'empty string')
   }
 
   try {
     await resolve('abc', import.meta.url)
     t.fail()
   } catch (error) {
-    t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'unfound bare specifier')
+    const exception = /** @type {ErrnoException} */ (error)
+    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'unfound bare specifier')
   }
 
   try {
     await resolve('/abc', import.meta.url)
     t.fail()
   } catch (error) {
-    t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'unfound absolute path')
+    const exception = /** @type {ErrnoException} */ (error)
+    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'unfound absolute path')
   }
 
   try {
     await resolve('./abc', import.meta.url)
     t.fail()
   } catch (error) {
-    t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'unfound relative path')
+    const exception = /** @type {ErrnoException} */ (error)
+    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'unfound relative path')
   }
 
   try {
     await resolve('../abc', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_MODULE_NOT_FOUND',
       'unfound relative parental path'
     )
@@ -59,8 +68,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('#', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_INVALID_MODULE_SPECIFIER',
       'empty import specifier'
     )
@@ -70,8 +80,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('#/', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_INVALID_MODULE_SPECIFIER',
       'empty absolute import specifier'
     )
@@ -133,22 +144,25 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('xxx-missing', import.meta.url)
     t.fail()
   } catch (error) {
-    t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'missing bare specifier')
+    const exception = /** @type {ErrnoException} */ (error)
+    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'missing bare specifier')
   }
 
   try {
     await resolve('@a/b', import.meta.url)
     t.fail()
   } catch (error) {
-    t.equal(error.code, 'ERR_MODULE_NOT_FOUND', 'missing scoped bare specifier')
+    const exception = /** @type {ErrnoException} */ (error)
+    t.equal(exception.code, 'ERR_MODULE_NOT_FOUND', 'missing scoped bare specifier')
   }
 
   try {
     await resolve('@scope-only', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_INVALID_MODULE_SPECIFIER',
       'invalid scoped specifier'
     )
@@ -158,8 +172,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('%20', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_INVALID_MODULE_SPECIFIER',
       'invalid package name as specifier'
     )
@@ -169,8 +184,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('tape/index.js', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_PACKAGE_PATH_NOT_EXPORTED',
       'bare specifier w/ path that’s not exported'
     )
@@ -210,8 +226,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('xss:1', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_UNSUPPORTED_ESM_URL_SCHEME',
       'should not support other protocols'
     )
@@ -233,8 +250,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('./example.js', 'data:1')
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       oldNode ? 'ERR_INVALID_URL' : 'ERR_INVALID_URL_SCHEME',
       'should not be able to resolve relative to a `data:` parent url'
     )
@@ -256,8 +274,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('xxx-missing', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_MODULE_NOT_FOUND',
       'missing packages w/o `package.json`'
     )
@@ -267,8 +286,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('#local', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_PACKAGE_IMPORT_NOT_DEFINED',
       'missing import map w/o `package.json`'
     )
@@ -278,8 +298,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('no-package-json', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_MODULE_NOT_FOUND',
       'should not be able to import packages that themselves don’t have `package.json`s (1)'
     )
@@ -289,8 +310,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('package-no-main', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_MODULE_NOT_FOUND',
       'should not be able to import packages w/o index files'
     )
@@ -304,7 +326,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   await (async () => {
     const oldEmitWarning = process.emitWarning
-    /** @type {string} */
+    /** @type {string|undefined} */
     let deprecation
 
     // @ts-expect-error hush
@@ -339,7 +361,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   await (async () => {
     const oldEmitWarning = process.emitWarning
-    /** @type {string} */
+    /** @type {string|undefined} */
     let deprecation
 
     // @ts-expect-error hush
@@ -376,8 +398,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('package-invalid-json', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_INVALID_PACKAGE_CONFIG',
       'should not be able to import packages w/ broken `package.json`s'
     )
@@ -405,8 +428,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('package-export-map-2/missing', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_PACKAGE_PATH_NOT_EXPORTED',
       'should not be able to import things not in an export map'
     )
@@ -416,8 +440,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     await resolve('package-export-map-4', import.meta.url)
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_PACKAGE_PATH_NOT_EXPORTED',
       'should not be able to import things from an empty export map'
     )
@@ -479,8 +504,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     )
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_PACKAGE_IMPORT_NOT_DEFINED',
       'should not be able to import things not in an import map'
     )
@@ -493,8 +519,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     )
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       'ERR_PACKAGE_IMPORT_NOT_DEFINED',
       'should not be able to import things not in an import map incorrectly defined w/o `#`'
     )
@@ -516,8 +543,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     )
     t.fail()
   } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
     t.equal(
-      error.code,
+      exception.code,
       oldNode ? 'ERR_INVALID_PACKAGE_TARGET' : 'ERR_PACKAGE_IMPORT_NOT_DEFINED',
       'should not be able to import an invalid import package target'
     )
@@ -525,7 +553,7 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   await (async () => {
     const oldEmitWarning = process.emitWarning
-    /** @type {string} */
+    /** @type {string|undefined} */
     let deprecation
 
     // @ts-expect-error hush
@@ -547,8 +575,9 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       )
       t.fail()
     } catch (error) {
+      const exception = /** @type {ErrnoException} */ (error)
       t.equal(
-        error.code,
+        exception.code,
         oldNode ? 'ERR_MODULE_NOT_FOUND' : 'ERR_PACKAGE_IMPORT_NOT_DEFINED',
         'should support legacy folders in import maps (1)'
       )

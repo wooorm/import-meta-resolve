@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('./lib/errors.js').ErrnoException} ErrnoException
+ */
+
 import {defaultResolve} from './lib/resolve.js'
 
 /**
@@ -24,8 +28,10 @@ export async function resolve(specifier, parent) {
   try {
     return defaultResolve(specifier, {parentURL: parent}).url
   } catch (error) {
-    return error.code === 'ERR_UNSUPPORTED_DIR_IMPORT'
-      ? error.url
+    const exception = /** @type {ErrnoException} */ (error)
+
+    return exception.code === 'ERR_UNSUPPORTED_DIR_IMPORT' && typeof exception.url === 'string'
+      ? exception.url
       : Promise.reject(error)
   }
 }
