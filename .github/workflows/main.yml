@@ -21,4 +21,4 @@ jobs:
           - windows-latest
         node:
           - lts/fermium
-          - node
+          - lts/gallium
