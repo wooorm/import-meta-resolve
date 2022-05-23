@@ -597,15 +597,6 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
   t.is(
     await resolve(
-      '#a',
-      new URL('node_modules/package-import-map-6/', import.meta.url).href
-    ),
-    new URL('node:net').href,
-    'should be able to resolve to a built-in node module'
-  )
-
-  t.is(
-    await resolve(
       'package-self-import-1',
       new URL('node_modules/package-self-import-1/', import.meta.url).href
     ),
