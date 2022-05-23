@@ -600,16 +600,21 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
       'package-self-import-1',
       new URL('node_modules/package-self-import-1/', import.meta.url).href
     ),
-    new URL('node_modules/package-self-import-1/index.js', import.meta.url).href,
+    new URL('node_modules/package-self-import-1/index.js', import.meta.url)
+      .href,
     'should be able to resolve a self-import'
   )
 
   t.is(
     await resolve(
       'package-self-import-1',
-      new URL('node_modules/package-self-import-1/test/index.js', import.meta.url).href
+      new URL(
+        'node_modules/package-self-import-1/test/index.js',
+        import.meta.url
+      ).href
     ),
-    new URL('node_modules/package-self-import-1/index.js', import.meta.url).href,
+    new URL('node_modules/package-self-import-1/index.js', import.meta.url)
+      .href,
     'should be able to resolve a self-import from a sub-file'
   )
 
