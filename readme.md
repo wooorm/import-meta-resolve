@@ -48,29 +48,25 @@ npm install import-meta-resolve
 ```js
 import {resolve} from 'import-meta-resolve'
 
-main()
+// A file:
+console.log(await resolve('./index.js', import.meta.url))
+//=> file:///Users/tilde/Projects/oss/import-meta-resolve/index.js
 
-async function main() {
-  // A file:
-  console.log(await resolve('./index.js', import.meta.url))
-  //=> file:///Users/tilde/Projects/oss/import-meta-resolve/index.js
+// A CJS package:
+console.log(await resolve('builtins', import.meta.url))
+//=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/builtins/index.js
 
-  // A CJS package:
-  console.log(await resolve('builtins', import.meta.url))
-  //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/builtins/index.js
+// A scoped CJS package:
+console.log(await resolve('@eslint/eslintrc', import.meta.url))
+//=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/@eslint/eslintrc/lib/index.js
 
-  // A scoped CJS package:
-  console.log(await resolve('@eslint/eslintrc', import.meta.url))
-  //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/@eslint/eslintrc/lib/index.js
+// A package with an export map:
+console.log(await resolve('tape/lib/test', import.meta.url))
+//=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/tape/lib/test.js
 
-  // A package with an export map:
-  console.log(await resolve('tape/lib/test', import.meta.url))
-  //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/tape/lib/test.js
-
-  // A node builtin:
-  console.log(await resolve('fs', import.meta.url))
-  //=> node:fs
-}
+// A node builtin:
+console.log(await resolve('fs', import.meta.url))
+//=> node:fs
 ```
 
 ## API
