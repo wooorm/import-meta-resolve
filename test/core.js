@@ -238,6 +238,20 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     )
   }
 
+  if (!oldNode) {
+    try {
+      await resolve('node:fs', 'https://example.com/file.html')
+      t.fail()
+    } catch (error) {
+      const exception = /** @type {ErrnoException} */ (error)
+      t.equal(
+        exception.code,
+        'ERR_NETWORK_IMPORT_DISALLOWED',
+        'should not support loading builtins from http'
+      )
+    }
+  }
+
   t.is(
     await resolve('./index.js?1', import.meta.url),
     new URL('index.js?1', import.meta.url).href,
