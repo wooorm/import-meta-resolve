@@ -5,15 +5,38 @@
 [![Downloads][downloads-badge]][downloads]
 
 Resolve things like Node.js.
-Ponyfill for [`import.meta.resolve`][resolve].
-Supports import maps, export maps, loading CJS and ESM projects, all of that!
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When to use this?](#when-to-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`resolve(specifier, parent)`](#resolvespecifier-parent)
+    *   [`moduleResolve(specifier, parent, conditions, preserveSymlinks)`](#moduleresolvespecifier-parent-conditions-preservesymlinks)
+*   [Algorithm](#algorithm)
+*   [Differences to Node](#differences-to-node)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a ponyfill for [`import.meta.resolve`][resolve].
+It supports everything you need to resolve files just like modern Node does:
+import maps, export maps, loading CJS and ESM projects, all of that!
+
+## When to use this?
+
+As of Node.js 18.2, `import.meta.resolve` is still behind an experimental flag.
+This package can be used to do what it does in Node 14–18.
 
 ## Install
 
-This package is ESM only: Node 12+ is needed to use it and it must be `import`ed
-instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 14.14+, 16.0+, or 18.0+), install with [npm][]:
 
 ```sh
 npm install import-meta-resolve
@@ -36,38 +59,42 @@ async function main() {
   //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/builtins/index.js
 
   // A scoped CJS package:
-  console.log(await resolve('@babel/core', import.meta.url))
-  //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/@babel/core/lib/index.js
+  console.log(await resolve('@eslint/eslintrc', import.meta.url))
+  //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/@eslint/eslintrc/lib/index.js
 
   // A package with an export map:
   console.log(await resolve('tape/lib/test', import.meta.url))
   //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/tape/lib/test.js
+
+  // A node builtin:
+  console.log(await resolve('fs', import.meta.url))
+  //=> node:fs
 }
 ```
 
 ## API
 
-This package exports the following identifiers: `resolve`, `moduleResolve`.
+This package exports the identifiers `resolve` and `moduleResolve`.
 There is no default export.
 
-## `resolve(specifier, parent)`
+### `resolve(specifier, parent)`
 
-Match `import.meta.resolve` except that `parent` is required (you should
-probably pass `import.meta.url`).
+Match `import.meta.resolve` except that `parent` is required (you can pass
+`import.meta.url`).
 
 ###### Parameters
 
 *   `specifier` (`string`)
-    — `/example.js`, `./example.js`, `../example.js`, `some-package`
+    — `/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc
 *   `parent` (`string`, example: `import.meta.url`)
-    Full URL (to a file) that `specifier` is resolved relative from
+    — full URL (to a file) that `specifier` is resolved relative from
 
 ###### Returns
 
-Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL to
-the found thing.
+Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL
+(`string`) to the found thing.
 
-## `moduleResolve(specifier, parent, conditions, preserveSymlinks)`
+### `moduleResolve(specifier, parent, conditions, preserveSymlinks)`
 
 The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
 (which is sync and slightly lower-level than `resolve`).
@@ -75,17 +102,17 @@ The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
 ###### Parameters
 
 *   `specifier` (`string`)
-    — `/example.js`, `./example.js`, `../example.js`, `some-package`
+    — `/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc
 *   `parent` (`URL`, example: `import.meta.url`)
-    Full URL (to a file) that `specifier` is resolved relative from
+    — full URL (to a file) that `specifier` is resolved relative from
 *   `conditions` (`Set<string>`, default: `new Set('node', 'import')`)
-    Conditions
+    — conditions
 *   `preserveSymlinks` (`boolean`, default: `false`)
-    — Keep symlinks instead of resolving them
+    — keep symlinks instead of resolving them
 
 ###### Returns
 
-A URL object to the found thing.
+A URL object (`URL`) to the found thing.
 
 ## Algorithm
 
@@ -113,19 +140,46 @@ lower-level than `resolve`).
 ###### Errors
 
 *   `ERR_INVALID_MODULE_SPECIFIER`
-    — when `specifier` is invalid
+    — when `specifier` is invalid (example: `'#'`)
 *   `ERR_INVALID_PACKAGE_CONFIG`
-    — when a `package.json` is invalid
+    — when a `package.json` is invalid (example: invalid JSON)
 *   `ERR_INVALID_PACKAGE_TARGET`
-    — when a `package.json` `exports` or `imports` is invalid
+    — when a `package.json` `exports` or `imports` is invalid (example: when it
+    does not start with `'./'`)
 *   `ERR_MODULE_NOT_FOUND`
-    — when `specifier` cannot be found in `parent`
+    — when `specifier` cannot be found in `parent` (example: `'some-missing-package'`)
+*   `ERR_NETWORK_IMPORT_DISALLOWED`
+    — thrown when trying to resolve a local file or builtin from a remote file
+    (`node:fs` relative to `'https://example.com'`)
 *   `ERR_PACKAGE_IMPORT_NOT_DEFINED`
-    — when a local import is not defined in an import map
+    — when a local import is not defined in an import map (example: `'#local'`
+    when not defined)
 *   `ERR_PACKAGE_PATH_NOT_EXPORTED`
-    — when an export is not defined in an export map
+    — when an export is not defined in an export map (example: `'tape/index.js'`,
+    which is not in its export map)
 *   `ERR_UNSUPPORTED_DIR_IMPORT`
-    — when attempting to import a directory
+    — when attempting to import a directory (example: `'./lib/'`)
+*   `ERR_UNKNOWN_FILE_EXTENSION`
+    — when somehow reading a file that has an unexpected extensions (`'./readme.md'`)
+*   `ERR_INVALID_ARG_VALUE`
+    — when `conditions` is incorrect
+*   `ERR_UNSUPPORTED_ESM_URL_SCHEME`
+    — when an unexpected protocol is found (`'xss:alert(1)'`)
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional types `ErrnoException`.
+
+## Compatibility
+
+This package is at least compatible with all maintained versions of Node.js.
+As of now, that is Node.js 14.14+, 16.0+, and 18.0+.
+
+## Contribute
+
+Yes please!
+See [How to Contribute to Open Source][contribute].
 
 ## License
 
@@ -150,6 +204,12 @@ lower-level than `resolve`).
 [license]: license
 
 [author]: https://wooorm.com
+
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[typescript]: https://www.typescriptlang.org
+
+[contribute]: https://opensource.guide/how-to-contribute/
 
 [algo]: https://nodejs.org/dist/latest-v14.x/docs/api/esm.html#esm_resolver_algorithm
 
