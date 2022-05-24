@@ -17,6 +17,7 @@ Resolve things like Node.js.
     *   [`moduleResolve(specifier, parent, conditions, preserveSymlinks)`](#moduleresolvespecifier-parent-conditions-preservesymlinks)
 *   [Algorithm](#algorithm)
 *   [Differences to Node](#differences-to-node)
+*   [Errors](#errors)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Contribute](#contribute)
@@ -137,7 +138,7 @@ lower-level than `resolve`).
 *   Prototypal methods are not guarded: Node protects for example `String#slice`
     or so from being tampered with, whereas this doesn’t
 
-###### Errors
+## Errors
 
 *   `ERR_INVALID_MODULE_SPECIFIER`
     — when `specifier` is invalid (example: `'#'`)
