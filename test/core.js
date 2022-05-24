@@ -10,6 +10,7 @@ import test from 'tape'
 import {resolve} from '../index.js'
 
 const windows = process.platform === 'win32'
+const veryOldNode = semver.lt(process.versions.node, '16.0.0')
 const oldNode = semver.lt(process.versions.node, '18.0.0')
 
 process.on('exit', async () => {
@@ -594,6 +595,17 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
 
     process.emitWarning = oldEmitWarning
   })()
+
+  if (!veryOldNode) {
+    t.is(
+      await resolve(
+        '#a',
+        new URL('node_modules/package-import-map-6/', import.meta.url).href
+      ),
+      new URL('node:net').href,
+      'should be able to resolve to a built-in node module'
+    )
+  }
 
   t.is(
     await resolve(
