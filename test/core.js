@@ -644,5 +644,19 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
     'should be able to resolve a self-import from a sub-file'
   )
 
+  t.is(
+    await resolve('package-custom-extensions', import.meta.url),
+    new URL('node_modules/package-custom-extensions/b.ts', import.meta.url)
+      .href,
+    'should be able to resolve a custom `.ts` extension'
+  )
+
+  t.is(
+    await resolve('package-custom-extensions/c', import.meta.url),
+    new URL('node_modules/package-custom-extensions/d.wasm', import.meta.url)
+      .href,
+    'should be able to resolve a custom `.wasm` extension'
+  )
+
   t.end()
 })
