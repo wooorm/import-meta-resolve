@@ -102,7 +102,7 @@ The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
     — `/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc
 *   `parent` (`URL`, example: `import.meta.url`)
     — full URL (to a file) that `specifier` is resolved relative from
-*   `conditions` (`Set<string>`, default: `new Set('node', 'import')`)
+*   `conditions` (`Set<string>`, default: `new Set(['node', 'import'])`)
     — conditions
 *   `preserveSymlinks` (`boolean`, default: `false`)
     — keep symlinks instead of resolving them
