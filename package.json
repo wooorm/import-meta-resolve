@@ -28,9 +28,6 @@
     "index.d.ts",
     "index.js"
   ],
-  "dependencies": {
-    "builtins": "^5.0.0"
-  },
   "devDependencies": {
     "@types/node": "^17.0.0",
     "@types/semver": "^7.0.0",
