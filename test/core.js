@@ -20,7 +20,7 @@ process.on('exit', async () => {
 })
 
 test('resolve(specifier, base?, conditions?)', async function () {
-  assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+  assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
   await fs.rename('package.json', 'package.json.bak')
 
@@ -135,8 +135,8 @@ test('resolve(specifier, base?, conditions?)', async function () {
   )
 
   assert.equal(
-    await resolve('tape', import.meta.url),
-    new URL('../node_modules/tape/index.js', import.meta.url).href,
+    await resolve('micromark', import.meta.url),
+    new URL('../node_modules/micromark/index.js', import.meta.url).href,
     'should resolve a bare specifier to a package'
   )
 
@@ -205,7 +205,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
   }
 
   try {
-    await resolve('tape/index.js', import.meta.url)
+    await resolve('micromark/index.js', import.meta.url)
     assert.fail()
   } catch (error) {
     const exception = /** @type {ErrnoException} */ (error)
@@ -217,14 +217,14 @@ test('resolve(specifier, base?, conditions?)', async function () {
   }
 
   assert.equal(
-    await resolve('tape/package', import.meta.url),
-    new URL('../node_modules/tape/package.json', import.meta.url).href,
+    await resolve('micromark/stream', import.meta.url),
+    new URL('../node_modules/micromark/stream.js', import.meta.url).href,
     'should resolve a bare specifier + path which is exported'
   )
 
   assert.equal(
-    await resolve('tape', import.meta.url),
-    new URL('../node_modules/tape/index.js', import.meta.url).href,
+    await resolve('micromark', import.meta.url),
+    new URL('../node_modules/micromark/index.js', import.meta.url).href,
     'should cache results'
   )
 
@@ -305,8 +305,8 @@ test('resolve(specifier, base?, conditions?)', async function () {
   )
 
   assert.equal(
-    await resolve('tape', import.meta.url),
-    new URL('../node_modules/tape/index.js', import.meta.url).href,
+    await resolve('micromark', import.meta.url),
+    new URL('../node_modules/micromark/index.js', import.meta.url).href,
     'should be able to find packages w/o `package.json`'
   )
 
@@ -365,7 +365,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
   )
 
   await (async () => {
-    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
     /** @type {string|undefined} */
@@ -402,7 +402,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
   })()
 
   await (async () => {
-    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
     /** @type {string|undefined} */
@@ -493,7 +493,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
   }
 
   await (async () => {
-    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
     /** @type {string} */
@@ -600,7 +600,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
   }
 
   await (async () => {
-    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
     /** @type {string|undefined} */
