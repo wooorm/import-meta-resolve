@@ -31,13 +31,13 @@ import maps, export maps, loading CJS and ESM projects, all of that!
 
 ## When to use this?
 
-As of Node.js 18.2, `import.meta.resolve` is still behind an experimental flag.
+As of Node.js 19.1, `import.meta.resolve` is still behind an experimental flag.
 This package can be used to do what it does in Node 14–18.
 
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+, 16.0+, or 18.0+), install with [npm][]:
+In Node.js (version 14.14+, 16.0+), install with [npm][]:
 
 ```sh
 npm install import-meta-resolve
@@ -124,14 +124,14 @@ lower-level than `resolve`).
 
 *   `parent` defaulting to `import.meta.url` cannot be ponyfilled: you have to
     explicitly pass it
-*   No support for CLI flags: `--experimental-specifier-resolution`,
+*   no support for CLI flags: `--experimental-specifier-resolution`,
     `--experimental-json-modules`, `--experimental-wasm-modules`,
     `--experimental-policy`, `--experimental-network-imports`, `--no-addons`,
     `--input-type`, `--preserve-symlinks`,
     `--preserve-symlinks-main`, nor `--conditions` work
-*   No attempt is made to add a suggestion based on how things used to work in
+*   no attempt is made to add a suggestion based on how things used to work in
     CJS before to not-found errors
-*   Prototypal methods are not guarded: Node protects for example `String#slice`
+*   prototypal methods are not guarded: Node protects for example `String#slice`
     or so from being tampered with, whereas this doesn’t
 
 ## Errors
@@ -171,7 +171,7 @@ It exports the additional types `ErrnoException`.
 ## Compatibility
 
 This package is at least compatible with all maintained versions of Node.js.
-As of now, that is Node.js 14.14+, 16.0+, and 18.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 
 ## Contribute
 
