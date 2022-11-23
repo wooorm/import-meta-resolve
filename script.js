@@ -1,10 +1,10 @@
 import path from 'node:path'
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 
-const base = fs.readFileSync(path.join('test', 'core.js'))
+const base = await fs.readFile(path.join('test', 'core.js'))
 
 const lines = String(base)
   .replace(/\bresolve(?=\(|,)/g, 'import.meta.resolve')
   .split('\n')
 
-fs.writeFileSync(path.join('test', 'baseline.js'), lines.join('\n'))
+await fs.writeFile(path.join('test', 'baseline.js'), lines.join('\n'))
