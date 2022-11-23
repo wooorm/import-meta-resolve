@@ -3,7 +3,7 @@
  */
 
 import assert from 'node:assert/strict'
-import fs from 'node:fs/promises'
+import {promises as fs, renameSync} from 'node:fs'
 import process from 'node:process'
 import {URL, pathToFileURL} from 'node:url'
 import test from 'node:test'
@@ -15,7 +15,8 @@ const veryOldNode = semver.lt(process.versions.node, '16.0.0')
 const oldNode = semver.lt(process.versions.node, '18.0.0')
 
 process.on('exit', async () => {
-  await fs.rename('package.json.bak', 'package.json')
+  // Has to be sync.
+  renameSync('package.json.bak', 'package.json')
 })
 
 test('resolve(specifier, base?, conditions?)', async function () {

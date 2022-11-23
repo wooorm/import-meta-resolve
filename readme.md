@@ -126,11 +126,12 @@ lower-level than `resolve`).
 
 *   `parent` defaulting to `import.meta.url` cannot be ponyfilled: you have to
     explicitly pass it
-*   no support for CLI flags: `--experimental-specifier-resolution`,
+*   no support for CLI flags:
     `--experimental-json-modules`, `--experimental-wasm-modules`,
     `--experimental-policy`, `--experimental-network-imports`, `--no-addons`,
     `--input-type`, `--preserve-symlinks`,
     `--preserve-symlinks-main`, nor `--conditions` work
+*   no support for `WATCH_REPORT_DEPENDENCIES` env variable
 *   no attempt is made to add a suggestion based on how things used to work in
     CJS before to not-found errors
 *   prototypal methods are not guarded: Node protects for example `String#slice`
