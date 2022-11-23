@@ -44,12 +44,12 @@
     "xo": "^0.53.0"
   },
   "scripts": {
-    "generate": "node script.js",
-    "prepack": "npm run build && npm run format",
-    "build": "rimraf \"{lib/**,test/**,}*.d.ts\" && tsc && type-coverage",
+    "prepack": "npm run generate && npm run build && npm run format",
+    "generate": "node --conditions development script.js",
+    "build": "tsc --build --clean && tsc --build && type-coverage",
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
-    "test-api": "node --experimental-import-meta-resolve test/baseline.js && node test/index.js",
-    "test-coverage": "node --experimental-import-meta-resolve test/baseline.js && c8 --check-coverage --branches 75 --functions 75 --lines 75 --statements 75 --reporter lcov node test/index.js",
+    "test-api": "node --conditions development --experimental-import-meta-resolve test/baseline.js && node --conditions development test/index.js",
+    "test-coverage": "c8 --check-coverage --branches 75 --functions 75 --lines 75 --statements 75 --reporter lcov npm run test-api",
     "test": "npm run generate && npm run build && npm run format && npm run test-coverage"
   },
   "prettier": {

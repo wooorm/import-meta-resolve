@@ -2,6 +2,7 @@
  * @typedef {import('../index.js').ErrnoException} ErrnoException
  */
 
+import assert from 'node:assert/strict'
 import process from 'node:process'
 import {promises as fs} from 'node:fs'
 import {URL, pathToFileURL} from 'node:url'
@@ -18,6 +19,8 @@ process.on('exit', async () => {
 })
 
 test('resolve(specifier, base?, conditions?)', async function (t) {
+  assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+
   await fs.rename('package.json', 'package.json.bak')
 
   try {
@@ -345,6 +348,8 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   )
 
   await (async () => {
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+
     const oldEmitWarning = process.emitWarning
     /** @type {string|undefined} */
     let deprecation
@@ -380,6 +385,8 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   })()
 
   await (async () => {
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+
     const oldEmitWarning = process.emitWarning
     /** @type {string|undefined} */
     let deprecation
@@ -469,6 +476,8 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   }
 
   await (async () => {
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+
     const oldEmitWarning = process.emitWarning
     /** @type {string} */
     let deprecation
@@ -574,6 +583,8 @@ test('resolve(specifier, base?, conditions?)', async function (t) {
   }
 
   await (async () => {
+    assert(resolve, 'expected `resolve` to exist (needed for TS in baeline')
+
     const oldEmitWarning = process.emitWarning
     /** @type {string|undefined} */
     let deprecation
