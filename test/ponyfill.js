@@ -1,18 +1,17 @@
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {resolve} from '../index.js'
 
-test('ponyfill', async function (t) {
+test('ponyfill', async function () {
   try {
     // @ts-expect-error
     await resolve('x')
-    t.fail()
+    assert.fail()
   } catch (error) {
-    t.equal(
+    assert.equal(
       String(error),
       'Error: Please pass `parent`: `import-meta-resolve` cannot ponyfill that',
       'should throw w/o `parent`'
     )
   }
-
-  t.end()
 })
