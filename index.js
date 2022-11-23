@@ -5,18 +5,19 @@
 import {defaultResolve} from './lib/resolve.js'
 
 /**
- * Provides a module-relative resolution function scoped to each module,
- * returning the URL string.
- * `import.meta.resolve` also accepts a second argument which is the parent
- * module from which to resolve from.
+ * Match `import.meta.resolve` except that `parent` is required (you can pass
+ * `import.meta.url`).
  *
- * This function is asynchronous because the ES module resolver in Node.js is
- * allowed to be asynchronous.
- *
- * @param {string} specifier The module specifier to resolve relative to parent.
- * @param {string} parent The absolute parent module URL to resolve from.
- *   You should pass `import.meta.url` or something else
+ * @param {string} specifier
+ *   The module specifier to resolve relative to parent
+ *   (`/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`,
+ *   etc).
+ * @param {string} parent
+ *   The absolute parent module URL to resolve from.
+ *   You should pass `import.meta.url` or something else.
  * @returns {Promise<string>}
+ *   Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL
+ *   to the found thing.
  */
 export async function resolve(specifier, parent) {
   if (!parent) {

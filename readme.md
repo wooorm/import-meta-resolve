@@ -82,9 +82,11 @@ Match `import.meta.resolve` except that `parent` is required (you can pass
 ###### Parameters
 
 *   `specifier` (`string`)
-    — `/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc
+    — the module specifier to resolve relative to parent
+    (`/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc).
 *   `parent` (`string`, example: `import.meta.url`)
-    — full URL (to a file) that `specifier` is resolved relative from
+    — the absolute parent module URL to resolve from.
+    You should pass `import.meta.url` or something else.
 
 ###### Returns
 
