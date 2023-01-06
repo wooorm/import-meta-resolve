@@ -15,9 +15,9 @@ Resolve things like Node.js.
 *   [API](#api)
     *   [`resolve(specifier, parent)`](#resolvespecifier-parent)
     *   [`moduleResolve(specifier, parent, conditions, preserveSymlinks)`](#moduleresolvespecifier-parent-conditions-preservesymlinks)
+    *   [`ErrnoException`](#errnoexception)
 *   [Algorithm](#algorithm)
 *   [Differences to Node](#differences-to-node)
-*   [Errors](#errors)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Contribute](#contribute)
@@ -25,19 +25,19 @@ Resolve things like Node.js.
 
 ## What is this?
 
-This package is a ponyfill for [`import.meta.resolve`][resolve].
+This package is a ponyfill for [`import.meta.resolve`][native-resolve].
 It supports everything you need to resolve files just like modern Node does:
 import maps, export maps, loading CJS and ESM projects, all of that!
 
 ## When to use this?
 
-As of Node.js 19.1, `import.meta.resolve` is still behind an experimental flag.
-This package can be used to do what it does in Node 14–18.
+As of Node.js 19.3, `import.meta.resolve` is still behind an experimental flag.
+This package can be used to do what it does in Node 14–19.
 
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+, 16.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install import-meta-resolve
@@ -71,7 +71,8 @@ console.log(await resolve('fs', import.meta.url))
 
 ## API
 
-This package exports the identifiers `resolve` and `moduleResolve`.
+This package exports the identifiers [`resolve`][resolve] and
+[`moduleResolve`][moduleresolve].
 There is no default export.
 
 ### `resolve(specifier, parent)`
@@ -91,7 +92,8 @@ Match `import.meta.resolve` except that `parent` is required (you can pass
 ###### Returns
 
 Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL
-(`string`) to the found thing.
+(`string`) to the found thing or rejects to an
+[`ErrnoException`][errnoexception].
 
 ### `moduleResolve(specifier, parent, conditions, preserveSymlinks)`
 
@@ -112,6 +114,55 @@ The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
 ###### Returns
 
 A URL object (`URL`) to the found thing.
+
+###### Throws
+
+Throws an [`ErrnoException`][errnoexception].
+
+### `ErrnoException`
+
+One of many different errors that occur when resolving (TypeScript type).
+
+###### Type
+
+```ts
+type ErrnoExceptionFields = Error & {
+  errnode?: number | undefined
+  code?: string | undefined
+  path?: string | undefined
+  syscall?: string | undefined
+  url?: string | undefined
+}
+```
+
+The `code` field on errors is one of the following strings:
+
+*   `'ERR_INVALID_MODULE_SPECIFIER'`
+    — when `specifier` is invalid (example: `'#'`)
+*   `'ERR_INVALID_PACKAGE_CONFIG'`
+    — when a `package.json` is invalid (example: invalid JSON)
+*   `'ERR_INVALID_PACKAGE_TARGET'`
+    — when a `package.json` `exports` or `imports` is invalid (example: when it
+    does not start with `'./'`)
+*   `'ERR_MODULE_NOT_FOUND'`
+    — when `specifier` cannot be found in `parent` (example: `'some-missing-package'`)
+*   `'ERR_NETWORK_IMPORT_DISALLOWED'`
+    — thrown when trying to resolve a local file or builtin from a remote file
+    (`node:fs` relative to `'https://example.com'`)
+*   `'ERR_PACKAGE_IMPORT_NOT_DEFINED'`
+    — when a local import is not defined in an import map (example: `'#local'`
+    when not defined)
+*   `'ERR_PACKAGE_PATH_NOT_EXPORTED'`
+    — when an export is not defined in an export map (example: `'tape/index.js'`,
+    which is not in its export map)
+*   `'ERR_UNSUPPORTED_DIR_IMPORT'`
+    — when attempting to import a directory (example: `'./lib/'`)
+*   `'ERR_UNKNOWN_FILE_EXTENSION'`
+    — when somehow reading a file that has an unexpected extensions (`'./readme.md'`)
+*   `'ERR_INVALID_ARG_VALUE'`
+    — when `conditions` is incorrect
+*   `'ERR_UNSUPPORTED_ESM_URL_SCHEME'`
+    — when an unexpected protocol is found (`'xss:alert(1)'`)
 
 ## Algorithm
 
@@ -137,39 +188,10 @@ lower-level than `resolve`).
 *   prototypal methods are not guarded: Node protects for example `String#slice`
     or so from being tampered with, whereas this doesn’t
 
-## Errors
-
-*   `ERR_INVALID_MODULE_SPECIFIER`
-    — when `specifier` is invalid (example: `'#'`)
-*   `ERR_INVALID_PACKAGE_CONFIG`
-    — when a `package.json` is invalid (example: invalid JSON)
-*   `ERR_INVALID_PACKAGE_TARGET`
-    — when a `package.json` `exports` or `imports` is invalid (example: when it
-    does not start with `'./'`)
-*   `ERR_MODULE_NOT_FOUND`
-    — when `specifier` cannot be found in `parent` (example: `'some-missing-package'`)
-*   `ERR_NETWORK_IMPORT_DISALLOWED`
-    — thrown when trying to resolve a local file or builtin from a remote file
-    (`node:fs` relative to `'https://example.com'`)
-*   `ERR_PACKAGE_IMPORT_NOT_DEFINED`
-    — when a local import is not defined in an import map (example: `'#local'`
-    when not defined)
-*   `ERR_PACKAGE_PATH_NOT_EXPORTED`
-    — when an export is not defined in an export map (example: `'tape/index.js'`,
-    which is not in its export map)
-*   `ERR_UNSUPPORTED_DIR_IMPORT`
-    — when attempting to import a directory (example: `'./lib/'`)
-*   `ERR_UNKNOWN_FILE_EXTENSION`
-    — when somehow reading a file that has an unexpected extensions (`'./readme.md'`)
-*   `ERR_INVALID_ARG_VALUE`
-    — when `conditions` is incorrect
-*   `ERR_UNSUPPORTED_ESM_URL_SCHEME`
-    — when an unexpected protocol is found (`'xss:alert(1)'`)
-
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `ErrnoException`.
+It exports the additional type [`ErrnoException`][errnoexception].
 
 ## Compatibility
 
@@ -213,4 +235,10 @@ See [How to Contribute to Open Source][contribute].
 
 [algo]: https://nodejs.org/dist/latest-v14.x/docs/api/esm.html#esm_resolver_algorithm
 
-[resolve]: https://nodejs.org/api/esm.html#esm_import_meta_resolve_specifier_parent
+[native-resolve]: https://nodejs.org/api/esm.html#esm_import_meta_resolve_specifier_parent
+
+[resolve]: #resolvespecifier-parent
+
+[moduleresolve]: #moduleResolvespecifier-parent-conditions-preserveSymlinks
+
+[errnoexception]: #errnoexception
