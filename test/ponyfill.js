@@ -2,10 +2,10 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {resolve} from '../index.js'
 
-test('ponyfill', async function () {
+test('ponyfill', function () {
   try {
     // @ts-expect-error
-    await resolve('x')
+    resolve('x')
     assert.fail()
   } catch (error) {
     assert.equal(

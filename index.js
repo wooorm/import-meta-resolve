@@ -15,11 +15,11 @@ import {defaultResolve} from './lib/resolve.js'
  * @param {string} parent
  *   The absolute parent module URL to resolve from.
  *   You should pass `import.meta.url` or something else.
- * @returns {Promise<string>}
- *   Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL
+ * @returns {string}
+ *   Returns a string that resolves to a full `file:`, `data:`, or `node:` URL
  *   to the found thing.
  */
-export async function resolve(specifier, parent) {
+export function resolve(specifier, parent) {
   if (!parent) {
     throw new Error(
       'Please pass `parent`: `import-meta-resolve` cannot ponyfill that'
@@ -31,10 +31,14 @@ export async function resolve(specifier, parent) {
   } catch (error) {
     const exception = /** @type {ErrnoException} */ (error)
 
-    return exception.code === 'ERR_UNSUPPORTED_DIR_IMPORT' &&
+    if (
+      exception.code === 'ERR_UNSUPPORTED_DIR_IMPORT' &&
       typeof exception.url === 'string'
-      ? exception.url
-      : Promise.reject(error)
+    ) {
+      return exception.url
+    }
+
+    throw error
   }
 }
 
