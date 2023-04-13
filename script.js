@@ -4,6 +4,8 @@ import fs from 'node:fs/promises'
 const base = await fs.readFile(path.join('test', 'core.js'))
 
 const lines = String(base)
+  // Changing the call from sync `resolve` to async `import.meta.resolve` because Node.js currently
+  // doesn't support synchronous `import.meta.resolve`.
   .replace(/\bresolve(?=\()/g, 'await import.meta.resolve')
   .replace(/\bresolve(?=,)/g, 'import.meta.resolve')
   .replace(
