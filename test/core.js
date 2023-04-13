@@ -14,7 +14,7 @@ const windows = process.platform === 'win32'
 const veryOldNode = semver.lt(process.versions.node, '16.0.0')
 const oldNode = semver.lt(process.versions.node, '18.0.0')
 
-const execute = (/** @type {() => void} */ f) => f()
+const run = (/** @type {() => void} */ f) => f()
 
 process.on('exit', async () => {
   // Has to be sync.
@@ -366,7 +366,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
     'should be able to import CJS packages w/o `main`'
   )
 
-  execute(() => {
+  run(() => {
     assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
@@ -403,7 +403,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
     process.emitWarning = oldEmitWarning
   })
 
-  execute(() => {
+  run(() => {
     assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
@@ -494,7 +494,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
     )
   }
 
-  execute(() => {
+  run(() => {
     assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
@@ -601,7 +601,7 @@ test('resolve(specifier, base?, conditions?)', async function () {
     }
   }
 
-  execute(() => {
+  run(() => {
     assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
     const oldEmitWarning = process.emitWarning
