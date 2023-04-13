@@ -16,7 +16,7 @@ import {defaultResolve} from './lib/resolve.js'
  *   The absolute parent module URL to resolve from.
  *   You should pass `import.meta.url` or something else.
  * @returns {string}
- *   Returns a string that resolves to a full `file:`, `data:`, or `node:` URL
+ *   Returns a string to a full `file:`, `data:`, or `node:` URL
  *   to the found thing.
  */
 export function resolve(specifier, parent) {
