@@ -3,5 +3,5 @@
 *.log
 coverage/
 /node_modules
-test/baseline.js
+test/baseline*.js
 yarn.lock
