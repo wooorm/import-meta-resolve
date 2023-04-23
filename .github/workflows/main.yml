@@ -21,4 +21,4 @@ jobs:
           - windows-latest
         node:
           - 18
-          - latest
+          - node
