@@ -16,9 +16,12 @@ const oldNode = semver.lt(process.versions.node, '18.0.0')
 const run = (/** @type {() => void} */ f) => f()
 
 process.on('exit', async () => {
+  try {
   // Has to be sync.
-  if (existsSync('package.json.bak')) {
     renameSync('package.json.bak', 'package.json')
+  } catch (/** @type {any} */ error) {
+    // ignore if not found, which will happen because baseline.js sometimes skips the test
+    if (error.code !== 'ENOENT') throw error
   }
 })
 
