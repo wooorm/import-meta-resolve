@@ -3,7 +3,7 @@
  */
 
 import assert from 'node:assert/strict'
-import {promises as fs, renameSync, existsSync} from 'node:fs'
+import {promises as fs, renameSync} from 'node:fs'
 import process from 'node:process'
 import {URL, pathToFileURL} from 'node:url'
 import test from 'node:test'
@@ -17,7 +17,7 @@ const run = (/** @type {() => void} */ f) => f()
 
 process.on('exit', async () => {
   try {
-  // Has to be sync.
+    // Has to be sync.
     renameSync('package.json.bak', 'package.json')
   } catch (/** @type {any} */ error) {
     // ignore if not found, which will happen because baseline.js sometimes skips the test
@@ -27,6 +27,7 @@ process.on('exit', async () => {
 
 test(
   'resolve(specifier, base?, conditions?)',
+  // // Note: this is toggled by the `baseline*.js` tests (see `script.js` for details on why and how)
   {skip: false},
   async function () {
     assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
