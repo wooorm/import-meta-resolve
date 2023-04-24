@@ -31,13 +31,13 @@ import maps, export maps, loading CJS and ESM projects, all of that!
 
 ## When to use this?
 
-As of Node.js 19.3, `import.meta.resolve` is still behind an experimental flag.
-This package can be used to do what it does in Node 14–19.
+As of Node.js 20.0, `import.meta.resolve` is still behind an experimental flag.
+This package can be used to do what it does in Node 14–20.
 
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 18.0+), install with [npm][]:
 
 ```sh
 npm install import-meta-resolve
@@ -49,30 +49,30 @@ npm install import-meta-resolve
 import {resolve} from 'import-meta-resolve'
 
 // A file:
-console.log(await resolve('./index.js', import.meta.url))
+console.log(resolve('./index.js', import.meta.url))
 //=> file:///Users/tilde/Projects/oss/import-meta-resolve/index.js
 
 // A CJS package:
-console.log(await resolve('builtins', import.meta.url))
+console.log(resolve('builtins', import.meta.url))
 //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/builtins/index.js
 
 // A scoped CJS package:
-console.log(await resolve('@eslint/eslintrc', import.meta.url))
+console.log(resolve('@eslint/eslintrc', import.meta.url))
 //=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/@eslint/eslintrc/lib/index.js
 
 // A package with an export map:
-console.log(await resolve('tape/lib/test', import.meta.url))
-//=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/tape/lib/test.js
+console.log(resolve('micromark/lib/parse', import.meta.url))
+//=> file:///Users/tilde/Projects/oss/import-meta-resolve/node_modules/micromark/lib/parse.js
 
 // A node builtin:
-console.log(await resolve('fs', import.meta.url))
+console.log(resolve('fs', import.meta.url))
 //=> node:fs
 ```
 
 ## API
 
-This package exports the identifiers [`resolve`][resolve] and
-[`moduleResolve`][moduleresolve].
+This package exports the identifiers [`moduleResolve`][moduleresolve] and
+[`resolve`][resolve].
 There is no default export.
 
 ### `resolve(specifier, parent)`
@@ -84,21 +84,23 @@ Match `import.meta.resolve` except that `parent` is required (you can pass
 
 *   `specifier` (`string`)
     — the module specifier to resolve relative to parent
-    (`/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc).
+    (`/example.js`, `./example.js`, `../example.js`, `some-package`, `fs`, etc)
 *   `parent` (`string`, example: `import.meta.url`)
-    — the absolute parent module URL to resolve from.
-    You should pass `import.meta.url` or something else.
+    — the absolute parent module URL to resolve from; you must pass
+    `import.meta.url` or something else
 
 ###### Returns
 
-Returns a promise that resolves to a full `file:`, `data:`, or `node:` URL
-(`string`) to the found thing or rejects to an
-[`ErrnoException`][errnoexception].
+Full `file:`, `data:`, or `node:` URL (`string`) to the found thing
+
+###### Throws
+
+Throws an [`ErrnoException`][errnoexception].
 
 ### `moduleResolve(specifier, parent, conditions, preserveSymlinks)`
 
 The [“Resolver Algorithm Specification”][algo] as detailed in the Node docs
-(which is sync and slightly lower-level than `resolve`).
+(which is slightly lower-level than `resolve`).
 
 ###### Parameters
 
@@ -177,6 +179,7 @@ lower-level than `resolve`).
 
 *   `parent` defaulting to `import.meta.url` cannot be ponyfilled: you have to
     explicitly pass it
+*   no support for loaders (that would mean implementing all of loaders)
 *   no support for CLI flags:
     `--experimental-json-modules`, `--experimental-wasm-modules`,
     `--experimental-policy`, `--experimental-network-imports`, `--no-addons`,
@@ -196,7 +199,7 @@ It exports the additional type [`ErrnoException`][errnoexception].
 ## Compatibility
 
 This package is at least compatible with all maintained versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
+As of now, that is Node.js 18 and later.
 
 ## Contribute
 
@@ -205,7 +208,7 @@ See [How to Contribute to Open Source][contribute].
 
 ## License
 
-[MIT][license] © [Titus Wormer][author]
+[MIT][license] © [Titus Wormer][author] and Node.js contributors
 
 <!-- Definitions -->
 

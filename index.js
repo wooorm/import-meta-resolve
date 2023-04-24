@@ -4,6 +4,8 @@
 
 import {defaultResolve} from './lib/resolve.js'
 
+export {moduleResolve} from './lib/resolve.js'
+
 /**
  * Match `import.meta.resolve` except that `parent` is required (you can pass
  * `import.meta.url`).
@@ -14,7 +16,7 @@ import {defaultResolve} from './lib/resolve.js'
  *   etc).
  * @param {string} parent
  *   The absolute parent module URL to resolve from.
- *   You should pass `import.meta.url` or something else.
+ *   You must pass `import.meta.url` or something else.
  * @returns {string}
  *   Returns a string to a full `file:`, `data:`, or `node:` URL
  *   to the found thing.
@@ -41,5 +43,3 @@ export function resolve(specifier, parent) {
     throw error
   }
 }
-
-export {moduleResolve} from './lib/resolve.js'
