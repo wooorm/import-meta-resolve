@@ -378,7 +378,7 @@ test(
       assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
       const oldEmitWarning = process.emitWarning
-      /** @type {string|undefined} */
+      /** @type {string | undefined} */
       let deprecation
 
       // @ts-expect-error hush
@@ -416,7 +416,7 @@ test(
       assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
       const oldEmitWarning = process.emitWarning
-      /** @type {string|undefined} */
+      /** @type {string | undefined} */
       let deprecation
 
       // @ts-expect-error hush
@@ -619,7 +619,7 @@ test(
       assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
 
       const oldEmitWarning = process.emitWarning
-      /** @type {string|undefined} */
+      /** @type {string | undefined} */
       let deprecation
 
       // @ts-expect-error hush
