@@ -19,9 +19,11 @@ process.on('exit', async () => {
   try {
     // Has to be sync.
     renameSync('package.json.bak', 'package.json')
-  } catch (/** @type {any} */ error) {
-    // ignore if not found, which will happen because baseline.js sometimes skips the test
-    if (error.code !== 'ENOENT') throw error
+  } catch (error) {
+    const exception = /** @type {ErrnoException} */ (error)
+    // ignore if not found, which will happen because baseline.js sometimes
+    // skips the test.
+    if (exception.code !== 'ENOENT') throw error
   }
 })
 
