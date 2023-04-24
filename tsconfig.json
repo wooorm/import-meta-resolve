@@ -1,5 +1,5 @@
 {
-  "include": ["**/**.js"],
+  "include": ["**/*.js"],
   "exclude": ["coverage/", "node_modules/"],
   "compilerOptions": {
     "checkJs": true,
@@ -10,7 +10,6 @@
     "lib": ["es2020"],
     "module": "node16",
     "newLine": "lf",
-    "skipLibCheck": true,
     "strict": true,
     "target": "es2020"
   }
