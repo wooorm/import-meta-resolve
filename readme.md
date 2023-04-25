@@ -37,7 +37,7 @@ This package can be used to do what it does in Node 14–20.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 18.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install import-meta-resolve
@@ -199,7 +199,7 @@ It exports the additional type [`ErrnoException`][errnoexception].
 ## Compatibility
 
 This package is at least compatible with all maintained versions of Node.js.
-As of now, that is Node.js 18 and later.
+As of now, that is Node.js 16 and later.
 
 ## Contribute
 
