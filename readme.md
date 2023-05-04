@@ -32,7 +32,7 @@ import maps, export maps, loading CJS and ESM projects, all of that!
 ## When to use this?
 
 As of Node.js 20.0, `import.meta.resolve` is still behind an experimental flag.
-This package can be used to do what it does in Node 14–20.
+This package can be used to do what it does in Node 16–20.
 
 ## Install
 
