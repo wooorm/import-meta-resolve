@@ -29,22 +29,22 @@
     "index.js"
   ],
   "devDependencies": {
-    "@types/node": "^18.0.0",
+    "@types/node": "^20.0.0",
     "@types/semver": "^7.0.0",
-    "c8": "^7.0.0",
-    "prettier": "^2.0.0",
+    "c8": "^8.0.0",
+    "prettier": "^3.0.0",
     "remark-cli": "^11.0.0",
     "remark-preset-wooorm": "^9.0.0",
     "semver": "^7.0.0",
     "type-coverage": "^2.0.0",
     "typescript": "^5.0.0",
-    "xo": "^0.54.0"
+    "xo": "^0.56.0"
   },
   "scripts": {
     "prepack": "npm run generate && npm run build && npm run format",
     "generate": "node --conditions development script.js",
     "build": "tsc --build --clean && tsc --build && type-coverage",
-    "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
+    "format": "remark . -qfo && prettier . -w --log-level warn && xo --fix",
     "test-api": "node --experimental-import-meta-resolve test/baseline.js && node --experimental-import-meta-resolve test/baseline-async.js && node test/index.js",
     "test-coverage": "c8 --check-coverage --branches 75 --functions 75 --lines 75 --statements 75 --reporter lcov npm run test-api",
     "test": "npm run generate && npm run build && npm run format && npm run test-coverage"
@@ -65,7 +65,9 @@
       "max-params": "off",
       "no-constant-condition": "off",
       "no-new": "off",
-      "prefer-arrow-callback": "off"
+      "prefer-arrow-callback": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-string-replace-all": "off"
     },
     "ignore": [
       "test/node_modules/"
