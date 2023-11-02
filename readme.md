@@ -163,8 +163,6 @@ The `code` field on errors is one of the following strings:
     — when somehow reading a file that has an unexpected extensions (`'./readme.md'`)
 *   `'ERR_INVALID_ARG_VALUE'`
     — when `conditions` is incorrect
-*   `'ERR_UNSUPPORTED_ESM_URL_SCHEME'`
-    — when an unexpected protocol is found (`'xss:alert(1)'`)
 
 ## Algorithm
 
@@ -181,10 +179,17 @@ lower-level than `resolve`).
     explicitly pass it
 *   no support for loaders (that would mean implementing all of loaders)
 *   no support for CLI flags:
-    `--experimental-json-modules`, `--experimental-wasm-modules`,
-    `--experimental-policy`, `--experimental-network-imports`, `--no-addons`,
-    `--input-type`, `--preserve-symlinks`,
-    `--preserve-symlinks-main`, nor `--conditions` work
+    `--conditions`,
+    `--experimental-default-type`,
+    `--experimental-json-modules`,
+    `--experimental-network-imports`,
+    `--experimental-policy`,
+    `--experimental-wasm-modules`,
+    `--input-type`,
+    `--no-addons`,
+    `--preserve-symlinks`, nor
+    `--preserve-symlinks-main`
+    work
 *   no support for `WATCH_REPORT_DEPENDENCIES` env variable
 *   no attempt is made to add a suggestion based on how things used to work in
     CJS before to not-found errors

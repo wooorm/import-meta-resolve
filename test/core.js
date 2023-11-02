@@ -11,7 +11,8 @@ import semver from 'semver'
 import {resolve} from '../index.js'
 
 const windows = process.platform === 'win32'
-const oldNode = semver.lt(process.versions.node, '18.0.0')
+const nodeBefore18 = semver.lt(process.versions.node, '18.0.0')
+const nodeBefore20 = semver.lt(process.versions.node, '20.0.0')
 
 const run = (/** @type {() => void} */ f) => f()
 
@@ -56,42 +57,26 @@ test(
       )
     }
 
-    // To do: figure out.
-    // try {
-    //   resolve('/abc', import.meta.url)
-    //   assert.fail()
-    // } catch (error) {
-    //   const exception = /** @type {ErrnoException} */ (error)
-    //   assert.equal(
-    //     exception.code,
-    //     'ERR_MODULE_NOT_FOUND',
-    //     'unfound absolute path'
-    //   )
-    // }
+    // Node before 20 throws for missing URLs.
+    if (!nodeBefore20) {
+      assert.equal(
+        resolve('/abc', import.meta.url),
+        new URL('/abc', import.meta.url).href,
+        'unfound absolute path'
+      )
 
-    // try {
-    //   resolve('./abc', import.meta.url)
-    //   assert.fail()
-    // } catch (error) {
-    //   const exception = /** @type {ErrnoException} */ (error)
-    //   assert.equal(
-    //     exception.code,
-    //     'ERR_MODULE_NOT_FOUND',
-    //     'unfound relative path'
-    //   )
-    // }
+      assert.equal(
+        resolve('./abc', import.meta.url),
+        new URL('abc', import.meta.url).href,
+        'unfound relative path'
+      )
 
-    // try {
-    //   resolve('../abc', import.meta.url)
-    //   assert.fail()
-    // } catch (error) {
-    //   const exception = /** @type {ErrnoException} */ (error)
-    //   assert.equal(
-    //     exception.code,
-    //     'ERR_MODULE_NOT_FOUND',
-    //     'unfound relative parental path'
-    //   )
-    // }
+      assert.equal(
+        resolve('../abc', import.meta.url),
+        new URL('../abc', import.meta.url).href,
+        'unfound relative parental path'
+      )
+    }
 
     try {
       resolve('#', import.meta.url)
@@ -259,20 +244,16 @@ test(
       'should support `data:` protocols'
     )
 
-    // ?
-    // try {
-    //   resolve('xss:1', import.meta.url)
-    //   assert.fail()
-    // } catch (error) {
-    //   const exception = /** @type {ErrnoException} */ (error)
-    //   assert.equal(
-    //     exception.code,
-    //     'ERR_UNSUPPORTED_ESM_URL_SCHEME',
-    //     'should not support other protocols'
-    //   )
-    // }
+    // Node before 18 fails on unknown protocols.
+    if (!nodeBefore18) {
+      assert.equal(
+        resolve('xss:1', import.meta.url),
+        'xss:1',
+        'should support other protocols'
+      )
+    }
 
-    if (!oldNode) {
+    if (!nodeBefore18) {
       try {
         resolve('node:fs', 'https://example.com/file.html')
         assert.fail()
@@ -303,10 +284,10 @@ test(
       assert.fail()
     } catch (error) {
       const exception = /** @type {ErrnoException} */ (error)
-      if (!oldNode) {
+      if (!nodeBefore18) {
         assert.equal(
           exception.code,
-          oldNode ? 'ERR_INVALID_URL_SCHEME' : 'ERR_INVALID_URL',
+          'ERR_INVALID_URL',
           'should not be able to resolve relative to a `data:` parent url'
         )
       }
@@ -403,7 +384,7 @@ test(
         'should be able to import ESM packages w/o `main`, but warn (1)'
       )
 
-      if (oldNode) {
+      if (nodeBefore18) {
         // Empty.
       } else {
         assert.equal(
@@ -441,7 +422,7 @@ test(
         'should be able to import ESM packages w/ non-full `main`, but warn (1)'
       )
 
-      if (oldNode) {
+      if (nodeBefore18) {
         // Empty.
       } else {
         assert.equal(
@@ -610,7 +591,7 @@ test(
       assert.fail()
     } catch (error) {
       const exception = /** @type {ErrnoException} */ (error)
-      if (!oldNode) {
+      if (!nodeBefore18) {
         assert.equal(
           exception.code,
           'ERR_PACKAGE_IMPORT_NOT_DEFINED',
@@ -646,7 +627,7 @@ test(
         assert.fail()
       } catch (error) {
         const exception = /** @type {ErrnoException} */ (error)
-        if (!oldNode) {
+        if (!nodeBefore18) {
           assert.equal(
             exception.code,
             'ERR_PACKAGE_IMPORT_NOT_DEFINED',
