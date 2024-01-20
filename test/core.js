@@ -534,6 +534,20 @@ test(
     })
 
     assert.equal(
+      resolve('package-export-map-array/a', import.meta.url),
+      new URL('node_modules/package-export-map-array/b.js', import.meta.url)
+        .href,
+      'should be able to resolve to the first entry in an export map array'
+    )
+
+    assert.equal(
+      resolve('package-export-map-array/c', import.meta.url),
+      new URL('node_modules/package-export-map-array/d.js', import.meta.url)
+        .href,
+      'should be able to resolve to the nth entry in an export map array'
+    )
+
+    assert.equal(
       resolve(
         '#a',
         new URL('node_modules/package-import-map-1/', import.meta.url).href
