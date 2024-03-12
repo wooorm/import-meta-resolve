@@ -285,9 +285,14 @@ test(
     } catch (error) {
       const exception = /** @type {ErrnoException} */ (error)
       if (!nodeBefore18) {
-        assert.equal(
-          exception.code,
-          'ERR_INVALID_URL',
+        assert(exception.code)
+        // To do: when pulling in new Node changes, the code is now
+        // `ERR_UNSUPPORTED_RESOLVE_REQUEST` (from around Node 21.7).
+        // Earlier was `ERR_INVALID_URL`.
+        assert.ok(
+          ['ERR_UNSUPPORTED_RESOLVE_REQUEST', 'ERR_INVALID_URL'].includes(
+            exception.code
+          ),
           'should not be able to resolve relative to a `data:` parent url'
         )
       }
