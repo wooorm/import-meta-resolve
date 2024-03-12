@@ -116,19 +116,19 @@ test(
 
     assert.equal(
       resolve('..', import.meta.url),
-      pathToFileURL('../import-meta-resolve/').href,
+      pathToFileURL('./').href,
       'should resolve a directory (1)'
     )
 
     assert.equal(
       resolve('../lib', import.meta.url),
-      pathToFileURL('../import-meta-resolve/lib').href,
+      pathToFileURL('./lib').href,
       'should resolve a directory (2)'
     )
 
     assert.equal(
       resolve('../lib/', import.meta.url),
-      pathToFileURL('../import-meta-resolve/lib/').href,
+      pathToFileURL('./lib/').href,
       'should resolve a directory (3)'
     )
 
