@@ -139,9 +139,8 @@ test(
     )
 
     assert.equal(
-      resolve('mdast-util-to-string/index.js', import.meta.url),
-      new URL('../node_modules/mdast-util-to-string/index.js', import.meta.url)
-        .href,
+      resolve('f-ck/index.js', import.meta.url),
+      new URL('../node_modules/f-ck/index.js', import.meta.url).href,
       'should resolve a bare specifier plus path'
     )
 
