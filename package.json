@@ -1,6 +1,6 @@
 {
   "name": "import-meta-resolve",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Resolve things like Node.js — ponyfill for `import.meta.resolve`",
   "license": "MIT",
   "keywords": [
