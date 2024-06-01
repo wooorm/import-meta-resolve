@@ -1,6 +1,6 @@
 {
   "name": "import-meta-resolve",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Resolve things like Node.js — ponyfill for `import.meta.resolve`",
   "license": "MIT",
   "keywords": [
@@ -32,9 +32,10 @@
     "@types/node": "^20.0.0",
     "@types/semver": "^7.0.0",
     "c8": "^9.0.0",
+    "f-ck": "^2.0.0",
     "prettier": "^3.0.0",
-    "remark-cli": "^11.0.0",
-    "remark-preset-wooorm": "^9.0.0",
+    "remark-cli": "^12.0.0",
+    "remark-preset-wooorm": "^10.0.0",
     "semver": "^7.0.0",
     "type-coverage": "^2.0.0",
     "typescript": "^5.0.0",
