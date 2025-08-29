@@ -3,6 +3,7 @@
   "exclude": ["coverage/", "node_modules/"],
   "compilerOptions": {
     "checkJs": true,
+    "declarationMap": true,
     "declaration": true,
     "emitDeclarationOnly": true,
     "exactOptionalPropertyTypes": true,

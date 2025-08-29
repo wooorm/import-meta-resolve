@@ -19,9 +19,10 @@
     "xo": "^1.0.0"
   },
   "files": [
-    "lib/",
+    "index.d.ts.map",
     "index.d.ts",
-    "index.js"
+    "index.js",
+    "lib/"
   ],
   "funding": {
     "type": "github",
