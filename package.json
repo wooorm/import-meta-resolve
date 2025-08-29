@@ -1,33 +1,10 @@
 {
-  "name": "import-meta-resolve",
-  "version": "4.1.0",
-  "description": "Resolve things like Node.js — ponyfill for `import.meta.resolve`",
-  "license": "MIT",
-  "keywords": [
-    "resolve",
-    "node",
-    "esm",
-    "module"
-  ],
-  "repository": "wooorm/import-meta-resolve",
-  "bugs": "https://github.com/wooorm/import-meta-resolve/issues",
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/wooorm"
-  },
   "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+  "bugs": "https://github.com/wooorm/import-meta-resolve/issues",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
   ],
-  "sideEffects": false,
-  "type": "module",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "files": [
-    "lib/",
-    "index.d.ts",
-    "index.js"
-  ],
+  "description": "Resolve things like Node.js — ponyfill for `import.meta.resolve`",
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/semver": "^7.0.0",
@@ -41,39 +18,60 @@
     "typescript": "^5.0.0",
     "xo": "^1.0.0"
   },
-  "scripts": {
-    "prepack": "npm run generate && npm run build && npm run format",
-    "generate": "node --conditions development script.js",
-    "build": "tsc --build --clean && tsc --build && type-coverage",
-    "format": "remark . -qfo && prettier . -w --log-level warn && xo --fix",
-    "test-api": "node --experimental-import-meta-resolve test/baseline.js && node --experimental-import-meta-resolve test/baseline-async.js && node test/index.js",
-    "test-coverage": "c8 --check-coverage --branches 75 --functions 75 --lines 75 --statements 75 --reporter lcov npm run test-api",
-    "test": "npm run generate && npm run build && npm run format && npm run test-coverage"
+  "files": [
+    "lib/",
+    "index.d.ts",
+    "index.js"
+  ],
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/wooorm"
   },
+  "keywords": [
+    "esm",
+    "module",
+    "node",
+    "resolve"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "import-meta-resolve",
   "prettier": {
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
     "bracketSpacing": false,
     "semi": false,
-    "trailingComma": "none"
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
   },
   "remarkConfig": {
     "plugins": [
-      "preset-wooorm",
+      "remark-preset-wooorm",
       [
         "remark-lint-maximum-heading-length",
         false
       ]
     ]
   },
+  "repository": "wooorm/import-meta-resolve",
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && type-coverage",
+    "format": "remark --frail --quiet --output -- . && prettier --write --log-level warn -- . && xo --fix",
+    "generate": "node --conditions development script.js",
+    "prepack": "npm run generate && npm run build && npm run format",
+    "test-api": "node --experimental-import-meta-resolve test/baseline.js && node --experimental-import-meta-resolve test/baseline-async.js && node test/index.js",
+    "test-coverage": "c8 --branches 75 --functions 75 --lines 75 --statements 75 --reporter lcov -- npm run test-api",
+    "test": "npm run generate && npm run build && npm run format && npm run test-coverage"
+  },
+  "sideEffects": false,
   "typeCoverage": {
     "atLeast": 100,
-    "detail": true,
     "strict": true,
-    "ignoreCatch": true,
     "ignoreFiles": [
       "lib/errors.d.ts"
     ]
-  }
+  },
+  "types": "index.d.ts",
+  "type": "module",
+  "version": "4.1.0"
 }
