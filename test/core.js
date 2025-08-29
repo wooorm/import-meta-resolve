@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict'
 import {promises as fs, renameSync} from 'node:fs'
 import process from 'node:process'
-import {URL, pathToFileURL} from 'node:url'
+import {pathToFileURL} from 'node:url'
 import test from 'node:test'
 import semver from 'semver'
 import {moduleResolve, resolve} from '../index.js'
@@ -33,7 +33,10 @@ test(
   // // Note: this is toggled by the `baseline*.js` tests (see `script.js` for details on why and how)
   {skip: false},
   async function () {
-    assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
+    assert.ok(
+      resolve,
+      'expected `resolve` to exist (needed for TS in baseline)'
+    )
 
     await fs.rename('package.json', 'package.json.bak')
 
@@ -147,7 +150,7 @@ test(
     assert.equal(
       resolve('@bcoe/v8-coverage', import.meta.url),
       new URL(
-        '../node_modules/@bcoe/v8-coverage/dist/lib/index.js',
+        '../node_modules/@bcoe/v8-coverage/src/lib/index.js',
         import.meta.url
       ).href,
       'should resolve a bare specifier w/ scope to a package'
@@ -258,7 +261,7 @@ test(
         assert.fail()
       } catch (error) {
         const exception = /** @type {ErrnoException} */ (error)
-        assert(
+        assert.ok(
           [
             // Node 22+
             'ERR_ASSERTION',
@@ -288,7 +291,7 @@ test(
     } catch (error) {
       const exception = /** @type {ErrnoException} */ (error)
       if (!nodeBefore18) {
-        assert(exception.code)
+        assert.ok(exception.code)
         // To do: when pulling in new Node changes, the code is now
         // `ERR_UNSUPPORTED_RESOLVE_REQUEST` (from around Node 21.7).
         // Earlier was `ERR_INVALID_URL`.
@@ -368,7 +371,10 @@ test(
     )
 
     run(() => {
-      assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
+      assert.ok(
+        resolve,
+        'expected `resolve` to exist (needed for TS in baseline)'
+      )
 
       const oldEmitWarning = process.emitWarning
       /** @type {string | undefined} */
@@ -406,7 +412,10 @@ test(
     })
 
     run(() => {
-      assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
+      assert.ok(
+        resolve,
+        'expected `resolve` to exist (needed for TS in baseline)'
+      )
 
       const oldEmitWarning = process.emitWarning
       /** @type {string | undefined} */
@@ -500,7 +509,10 @@ test(
     }
 
     run(() => {
-      assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
+      assert.ok(
+        resolve,
+        'expected `resolve` to exist (needed for TS in baseline)'
+      )
 
       const oldEmitWarning = process.emitWarning
       /** @type {string} */
@@ -609,7 +621,10 @@ test(
     }
 
     run(() => {
-      assert(resolve, 'expected `resolve` to exist (needed for TS in baseline)')
+      assert.ok(
+        resolve,
+        'expected `resolve` to exist (needed for TS in baseline)'
+      )
 
       const oldEmitWarning = process.emitWarning
       /** @type {string | undefined} */
