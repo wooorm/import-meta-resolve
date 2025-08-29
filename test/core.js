@@ -8,7 +8,7 @@ import process from 'node:process'
 import {URL, pathToFileURL} from 'node:url'
 import test from 'node:test'
 import semver from 'semver'
-import {resolve} from '../index.js'
+import {moduleResolve, resolve} from '../index.js'
 
 const windows = process.platform === 'win32'
 const nodeBefore18 = semver.lt(process.versions.node, '18.0.0')
@@ -258,9 +258,13 @@ test(
         assert.fail()
       } catch (error) {
         const exception = /** @type {ErrnoException} */ (error)
-        assert.equal(
-          exception.code,
-          'ERR_NETWORK_IMPORT_DISALLOWED',
+        assert(
+          [
+            // Node 22+
+            'ERR_ASSERTION',
+            // Node 20-
+            'ERR_NETWORK_IMPORT_DISALLOWED'
+          ].includes(/** @type {string} */ (exception.code)),
           'should not support loading builtins from http'
         )
       }
@@ -690,3 +694,12 @@ test(
     )
   }
 )
+
+test('moduleResolve(specifier, parent, conditions?, preserveSymlinks?)', function () {
+  assert.equal(
+    moduleResolve('package-export-conditions', new URL(import.meta.url)).href,
+    new URL('node_modules/package-export-conditions/esm.mjs', import.meta.url)
+      .href,
+    'should resolve to the ESM entry point'
+  )
+})
