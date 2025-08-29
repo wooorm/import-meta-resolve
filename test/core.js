@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../index.js').ErrnoException} ErrnoException
+ * @import {ErrnoException} from '../index.js'
  */
 
 import assert from 'node:assert/strict'

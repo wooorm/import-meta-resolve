@@ -1,4 +1,8 @@
-/** @type {import('xo').FlatXoConfig} */
+/**
+ * @import {FlatXoConfig} from 'xo'
+ */
+
+/** @type {FlatXoConfig} */
 const xoConfig = [
   {
     ignores: ['test/node_modules/'],
