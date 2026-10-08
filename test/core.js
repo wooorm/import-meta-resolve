@@ -710,6 +710,13 @@ test(
   }
 )
 
+test('resolve: a missing package (walks up every node_modules) still throws ERR_MODULE_NOT_FOUND', function () {
+  assert.throws(
+    () => resolve('package-that-does-not-exist-anywhere', import.meta.url),
+    (/** @type {ErrnoException} */ error) => error.code === 'ERR_MODULE_NOT_FOUND'
+  )
+})
+
 test('moduleResolve(specifier, parent, conditions?, preserveSymlinks?)', function () {
   assert.equal(
     moduleResolve('package-export-conditions', new URL(import.meta.url)).href,
