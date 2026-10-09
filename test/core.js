@@ -13,6 +13,10 @@ import {moduleResolve, resolve} from '../index.js'
 const windows = process.platform === 'win32'
 const nodeBefore18 = semver.lt(process.versions.node, '18.0.0')
 const nodeBefore20 = semver.lt(process.versions.node, '20.0.0')
+const nodeBeforeHashSlashImports = !semver.satisfies(
+  process.versions.node,
+  '^24.14.0 || >=25.4.0'
+)
 
 const run = (/** @type {() => void} */ f) => f()
 
@@ -618,6 +622,19 @@ test(
           'should not be able to import an invalid import package target'
         )
       }
+    }
+
+    // Node allows subpath imports starting with `#/` since 25.4.0 and 24.14.0.
+    if (!nodeBeforeHashSlashImports) {
+      assert.equal(
+        resolve(
+          '#/a.js',
+          new URL('node_modules/package-import-map-7/', import.meta.url).href
+        ),
+        new URL('node_modules/package-import-map-7/src/a.js', import.meta.url)
+          .href,
+        'should be able to resolve import map splats starting with `#/`'
+      )
     }
 
     run(() => {
