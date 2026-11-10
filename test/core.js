@@ -671,6 +671,47 @@ test(
       'should be able to resolve to a built-in node module'
     )
 
+    const packageNodeResolution = new URL(
+      'node_modules/package-node-resolution/index.js',
+      import.meta.url
+    ).href
+
+    assert.equal(
+      resolve('#feature/index.js', packageNodeResolution),
+      packageNodeResolution,
+      'should match imports patterns with a trailer after the wildcard'
+    )
+
+    assert.equal(
+      resolve('package-node-resolution', import.meta.url),
+      packageNodeResolution,
+      'should continue after a nested condition with no match'
+    )
+
+    assert.equal(
+      resolve('package-node-resolution/array', import.meta.url),
+      packageNodeResolution,
+      'should continue after an array of conditions with no match'
+    )
+
+    try {
+      resolve('package-node-resolution/blocked', import.meta.url)
+      assert.fail()
+    } catch (error) {
+      const exception = /** @type {ErrnoException} */ (error)
+      assert.equal(
+        exception.code,
+        'ERR_PACKAGE_PATH_NOT_EXPORTED',
+        'should stop after an explicit null target'
+      )
+    }
+
+    assert.equal(
+      resolve('package-empty-main', import.meta.url),
+      new URL('node_modules/package-empty-main/index.js', import.meta.url).href,
+      'should fall back to the index when main is empty'
+    )
+
     assert.equal(
       resolve(
         'package-self-import-1',
